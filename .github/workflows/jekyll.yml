@@ -3,8 +3,10 @@ name: Build and Deploy Jekyll
 on:
   push:
     branches:
-      - main  # 你要触发部署的分支（比如 main 分支）
+      - main  # 触发的分支，如果是其他分支，修改为相应的名称
   pull_request:
+    branches:
+      - main  # 拉取请求触发的分支
 
 jobs:
   build:
@@ -17,7 +19,7 @@ jobs:
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.1'  # 这里可以换成你需要的 Ruby 版本
+          ruby-version: '3.1'  # 或其他你需要的版本
 
       - name: Install Jekyll and Bundler
         run: gem install jekyll bundler
@@ -29,7 +31,7 @@ jobs:
         run: JEKYLL_ENV=production bundle exec jekyll build
 
       - name: Deploy to GitHub Pages
-         uses: actions/upload-artifact@v2
-
-          name: site
-          path: _site
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          deploy_branch: gh-pages
+          github_token: ${{ secrets.GITHUB_TOKEN }}
